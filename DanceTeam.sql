@@ -1,9 +1,7 @@
-Windows PowerShell
-Copyright (C) Microsoft Corporation. All rights reserved.
+Microsoft Windows [Version 10.0.26100.4770]
+(c) Microsoft Corporation. All rights reserved.
 
-Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
-
-PS C:\Users\Lavanya sadhu> mysql -u root -p
+C:\Users\Lavanya sadhu>mysql -u root -p
 Enter password: ****
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 9
@@ -17,6 +15,10 @@ owners.
 
 Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 
+mysql> SELECT Name, SUM(Marks) AS Total_Marks
+    -> FROM StudentMarks
+    -> GROUP BY Name;
+ERROR 1046 (3D000): No database selected
 mysql> show databases
     -> ;
 +--------------------+
@@ -30,66 +32,78 @@ mysql> show databases
 | performance_schema |
 | sys                |
 +--------------------+
-7 rows in set (0.00 sec)
+7 rows in set (0.12 sec)
 
 mysql> use danceteam
 Database changed
-mysql> CREATE TABLE DanceClub (
-    ->     MemberID INT PRIMARY KEY,
-    ->     FirstName VARCHAR(50) NOT NULL,
-    ->     LastName VARCHAR(50) NOT NULL,
-    ->     DanceStyle VARCHAR(50) DEFAULT 'Freestyle',
-    ->     Age INT,
-    ->     Level VARCHAR(20) DEFAULT 'Beginner'
+mysql> CREATE TABLE StudentMarks (
+    ->     StudentID INT,
+    ->     Name VARCHAR(50),
+    ->     Subject VARCHAR(50),
+    ->     Marks INT
     -> );
 Query OK, 0 rows affected (0.07 sec)
 
-mysql> INSERT INTO DanceClub (MemberID, FirstName, LastName, DanceStyle, Age, Level)
-    -> VALUES (1, 'Anu', 'Thalari', 'Bharatanatyam', 25, 'Intermediate');
+mysql> INSERT INTO StudentMarks VALUES (1, 'Aakash', 'Math', 85);
 Query OK, 1 row affected (0.03 sec)
 
-mysql> INSERT INTO DanceClub (MemberID, FirstName, LastName, DanceStyle, Age)
-    -> VALUES (2, 'Lavanya', 'Sadhu', 'Hip Hop', 22);
+mysql> INSERT INTO StudentMarks VALUES (2, 'Bhavna', 'Math', 78);
 Query OK, 1 row affected (0.01 sec)
 
-mysql> INSERT INTO DanceClub (MemberID, FirstName, LastName)
-    -> VALUES (3, 'Ajay', 'Kumar');
-Query OK, 1 row affected (0.01 sec)
-
-mysql> INSERT INTO DanceClub (MemberID, FirstName, LastName, Age)
-    -> VALUES (4, 'Durga', 'Bhavani', 27);INSERT INTO DanceClub (MemberID, FirstName, LastName, DanceStyle, Age, Level)
-Query OK, 1 row affected (0.01 sec)
-
-    -> VALUES (5, 'Srishanth', 'Sai', 'Contemporary', 30, 'Advanced');
+mysql> INSERT INTO StudentMarks VALUES (1, 'Aakash', 'Science', 90);
 Query OK, 1 row affected (0.00 sec)
 
-mysql> UPDATE DanceClub
-    -> SET DanceStyle = 'Salsa', Age = 26, Level = 'Beginner'
-    -> WHERE FirstName = 'Ajay' AND LastName = 'Kumar';
-Query OK, 1 row affected (0.01 sec)
-Rows matched: 1  Changed: 1  Warnings: 0
-
-mysql> UPDATE DanceClub
-    -> SET DanceStyle = 'Kathak'
-    -> WHERE FirstName = 'Durga' AND LastName = 'Bhavani';
+mysql> INSERT INTO StudentMarks VALUES (2, 'Bhavna', 'Science', 88);
 Query OK, 1 row affected (0.00 sec)
-Rows matched: 1  Changed: 1  Warnings: 0
 
-mysql> DELETE FROM DanceClub
-    -> WHERE Age < 23;
-Query OK, 1 row affected (0.01 sec)
+mysql> INSERT INTO StudentMarks VALUES (3, 'Charan', 'Math', 92);
+Query OK, 1 row affected (0.00 sec)
 
-mysql> DELETE FROM DanceClub
-    -> WHERE Level = 'Beginner';
-Query OK, 2 rows affected (0.01 sec)
+mysql> INSERT INTO StudentMarks VALUES (3, 'Charan', 'Science', 95);
+Query OK, 1 row affected (0.00 sec)
 
-mysql> select * from DanceClub;
-+----------+-----------+----------+---------------+------+--------------+
-| MemberID | FirstName | LastName | DanceStyle    | Age  | Level        |
-+----------+-----------+----------+---------------+------+--------------+
-|        1 | Anu       | Thalari  | Bharatanatyam |   25 | Intermediate |
-|        5 | Srishanth | Sai      | Contemporary  |   30 | Advanced     |
-+----------+-----------+----------+---------------+------+--------------+
+mysql> SELECT Name, SUM(Marks) AS Total_Marks
+    -> FROM StudentMarks
+    -> GROUP BY Name;
++--------+-------------+
+| Name   | Total_Marks |
++--------+-------------+
+| Aakash |         175 |
+| Bhavna |         166 |
+| Charan |         187 |
++--------+-------------+
+3 rows in set (0.01 sec)
+
+mysql> SELECT Subject, AVG(Marks) AS Average_Marks
+    -> FROM StudentMarks
+    -> GROUP BY Subject;
++---------+---------------+
+| Subject | Average_Marks |
++---------+---------------+
+| Math    |       85.0000 |
+| Science |       91.0000 |
++---------+---------------+
 2 rows in set (0.01 sec)
 
-mysql>
+mysql> SELECT Subject, COUNT(DISTINCT StudentID) AS Student_Count
+    -> FROM StudentMarks
+    -> GROUP BY Subject;
++---------+---------------+
+| Subject | Student_Count |
++---------+---------------+
+| Math    |             3 |
+| Science |             3 |
++---------+---------------+
+2 rows in set (0.01 sec)
+
+mysql> SELECT Name, SUM(Marks) AS Total_Marks
+    -> FROM StudentMarks
+    -> GROUP BY Name
+    -> HAVING Total_Marks > 170;
++--------+-------------+
+| Name   | Total_Marks |
++--------+-------------+
+| Aakash |         175 |
+| Charan |         187 |
++--------+-------------+
+2 rows in set (0.00 sec)
